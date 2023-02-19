@@ -1,10 +1,8 @@
-import styled, { keyframes } from 'styled-components';
-
-//Theme
+import styled from 'styled-components';
+// TS가 Styled compo 모른다고 에러 띄우는데
+// npm install @types/styled-components 으로 type definition을 설치
+// 타입 데피니션은 라이브러리 등을 사용할 때 TS에게 해당 라이브러리를 정의해놓은 것.
 const Title = styled.h1`
-  //styledcomponent의 prop은 컴포넌트에서 직접 전달뿐 아니라
-  // ThemeProvider을 최상위에 설정해뒀기 때문에
-  // theme 객체에 접근해서 textColor를 가져올 수 있음.
   color: ${(props) => props.theme.textColor};
 `;
 
