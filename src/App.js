@@ -1,66 +1,26 @@
 import styled, { keyframes } from 'styled-components';
 
+//Theme
+const Title = styled.h1`
+  //styledcomponent의 prop은 컴포넌트에서 직접 전달뿐 아니라
+  // ThemeProvider을 최상위에 설정해뒀기 때문에
+  // theme 객체에 접근해서 textColor를 가져올 수 있음.
+  color: ${(props) => props.theme.textColor};
+`;
+
 const Wrapper = styled.div`
   display: flex;
   height: 100vh;
   width: 100vw;
   justify-content: center;
   align-items: center;
-`;
-
-const rotationAnimation = keyframes`
-  0%{
-   transform: rotate(0deg);
-    border-radius: 0px;
-  }
-  50%{
-    transform: rotate(360deg);
-    border-radius: 50px;
-  }
-  100%{
-    transform: rotate(0deg);
-    border-radius: 0px;
-  }
-`;
-
-// Puseudo part 2.
-
-const Emoji = styled.span`
-  font-size: 36px;
-`;
-
-const Box = styled.div`
-  height: 100px;
-  width: 100px;
-  background-color: tomato;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  animation: ${rotationAnimation} 1s linear infinite;
-
-  //tag가 아닌 컴포넌트를 넣어주면 컴포넌트 태그가 무엇으로 바뀌어도 적용됨.
-  ${Emoji} {
-    &:hover {
-      font-size: 98px;
-    }
-  }
+  background-color: ${(props) => props.theme.backgroundColor};
 `;
 
 function App() {
   return (
     <Wrapper>
-      <Box>
-        <Emoji
-        //얘는 hover 적용되고
-        >
-          😽
-        </Emoji>
-      </Box>
-      <Emoji
-      // 얘는 적용안됨
-      >
-        🤥
-      </Emoji>
+      <Title>132132</Title>
     </Wrapper>
   );
 }
