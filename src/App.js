@@ -1,43 +1,68 @@
-import styled from 'styled-components';
+import styled, { keyframes } from 'styled-components';
 
-const Father = styled.div`
+const Wrapper = styled.div`
   display: flex;
 `;
 
-// AS and Attrs
-// tag는 바꾸고 속성은 그대로 두기
-
-const Btn = styled.button`
-  color: white;
-  background-color: tomato;
-  border: 0;
-  border-radius: 15px;
+const rotationAnimation = keyframes`
+  /*
+  이런식으로 하면 0& ~ 100%
+  from {
+    transform: rotate(0deg);
+    border-radius: 0px;
+  }
+  to{
+    transform: rotate(360deg);
+    border-radius: 50px;
+  }
+  */
+  0%{
+   transform: rotate(0deg);
+    border-radius: 0px;
+  }
+  50%{
+    transform: rotate(360deg);
+    border-radius: 50px;
+  }
+  100%{
+    transform: rotate(0deg);
+    border-radius: 0px;
+  }
 `;
 
-// Attrs : 생성 시 속성 설정, 원래 였다면 각 요소에 required 넣어줬어야.
-const Input = styled.input.attrs({ reqired: true, minLength: 10 })`
+const Box = styled.div`
+  height: 100px;
+  width: 100px;
   background-color: tomato;
-`;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  animation: ${rotationAnimation} 1s linear infinite;
 
-// 또 하나의 button이 되는 것이므로 해결책 X
-// const Link = styled(Btn)``
+  //component 내의 요소 선택도 가능 (Pseudo Selectors)
+  span {
+    font-size: 36px;
+    &:hover {
+      font-size: 50px;
+    }
+    &:active {
+      opacity: 0;
+    }
+  }
+  /*
+  아래와 같음.
+  span:hover {
+  }
+  */
+`;
 
 function App() {
   return (
-    <Father>
-      <Btn>Log in</Btn>
-      <Btn
-        //컴포넌트에 as 속성 주면 태그 변경됨.
-        as="a"
-        href="/"
-      >
-        Log in
-      </Btn>
-      <Input />
-      <Input />
-      <Input />
-      <Input />
-    </Father>
+    <Wrapper>
+      <Box>
+        <span>😽</span>
+      </Box>
+    </Wrapper>
   );
 }
 
