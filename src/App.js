@@ -4,38 +4,39 @@ const Father = styled.div`
   display: flex;
 `;
 
-//styled components에 prop 적용하기.
-const Box = styled.div`
-  background-color: ${(props) => props.bgColor};
-  width: 100px;
-  height: 100px;
-`;
+// AS and Attrs
+// tag는 바꾸고 속성은 그대로 두기
 
-//Extending 속성을 그대로 가져와서 다른 속성을 추가하고 싶을 때!
-/*
-const Circle = styled.div`
-  background-color: ${(props) => props.bgColor};
-  width: 100px;
-  height: 100px;
-  border-radius: 50px;
-`;
-*/
-// 요롷게 extend!!
-const Circle = styled(Box)`
-  border-radius: 50px;
-`;
-
-const Text = styled.span`
+const Btn = styled.button`
   color: white;
+  background-color: tomato;
+  border: 0;
+  border-radius: 15px;
 `;
+
+// Attrs : 생성 시 속성 설정, 원래 였다면 각 요소에 required 넣어줬어야.
+const Input = styled.input.attrs({ reqired: true, minLength: 10 })`
+  background-color: tomato;
+`;
+
+// 또 하나의 button이 되는 것이므로 해결책 X
+// const Link = styled(Btn)``
 
 function App() {
   return (
     <Father>
-      <Box bgColor="teal">
-        <Text>Hello</Text>
-      </Box>
-      <Circle bgColor="tomato" />
+      <Btn>Log in</Btn>
+      <Btn
+        //컴포넌트에 as 속성 주면 태그 변경됨.
+        as="a"
+        href="/"
+      >
+        Log in
+      </Btn>
+      <Input />
+      <Input />
+      <Input />
+      <Input />
     </Father>
   );
 }
