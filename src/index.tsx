@@ -2,18 +2,15 @@ import React from 'react';
 import ReactDOM from 'react-dom/client';
 import { ThemeProvider } from 'styled-components';
 import App from './App';
-import { darkTheme, lightTheme } from './theme';
-// theme.ts에 선언된 theme 사용
-
+import { theme } from './theme';
+// react-router-dom v5.3.2(완료 후 6으로 리팩토링 예정)
+// react-query 설치
 const root = ReactDOM.createRoot(
   document.getElementById('root') as HTMLElement
 );
 root.render(
   <React.StrictMode>
-    <ThemeProvider
-      // lightTheme에 따라 적용
-      theme={darkTheme}
-    >
+    <ThemeProvider theme={theme}>
       <App />
     </ThemeProvider>
   </React.StrictMode>
