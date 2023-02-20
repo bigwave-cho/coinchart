@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import styled from 'styled-components';
 
 interface ContainerProps {
@@ -16,21 +17,20 @@ const Container = styled.div<ContainerProps>`
 interface CircleProps {
   bgColor: string;
   borderColor?: string;
-  text?: string;
 }
 
-const Circle = ({
-  bgColor,
-  borderColor,
-  text = 'default text', // 이거는 ES6 문법. 더 좋아.
-}: CircleProps) => {
-  // Styled Compo의 props 타입은 borderColor가 required 이기 때문에
-  // 에러가 발생하고 있고 그래서 borderColor를 보낼 때 기본값을 주면 해결됨.
-  // a ?? b   : a가 undefined면 b , 있으면 a
+const Circle = ({ bgColor, borderColor }: CircleProps) => {
+  const [counter, setCounter] = useState<number | string>(1);
+  setCounter(2);
+  setCounter('2');
+  setCounter(true); //error
+  // useState 기본값을 넣어두면 TS가 알아서 타입지정해주니
+  // 위와 같은 간단한 타입은 추론하게 냅둬도 ㄱㅊ
   return (
-    <Container bgColor={bgColor} borderColor={borderColor ?? bgColor}>
-      {text}
-    </Container>
+    <Container
+      bgColor={bgColor}
+      borderColor={borderColor ?? bgColor}
+    ></Container>
   );
 };
 

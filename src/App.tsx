@@ -14,7 +14,7 @@ function App() {
   return (
     <Wrapper>
       <Circle borderColor="yellow" bgColor="teal" />
-      <Circle text="hihihihi" bgColor="tomato" />
+      <Circle bgColor="tomato" />
     </Wrapper>
   );
 }
