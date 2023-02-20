@@ -63,6 +63,8 @@ body {
 }
 a {
   text-decoration:none;
+  //부모로부터 color 상속받기
+  color:inherit;
 }
 `;
 
