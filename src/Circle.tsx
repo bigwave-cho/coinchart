@@ -1,30 +1,37 @@
 import styled from 'styled-components';
 
-interface CircleProps {
+interface ContainerProps {
   bgColor: string;
+  borderColor: string;
 }
 
-// StyledComponents에 프롭 타입 지정하는 방법 <type>
-const Container = styled.div<CircleProps>`
+const Container = styled.div<ContainerProps>`
   width: 200px;
   height: 200px;
   background-color: ${(props) => props.bgColor};
   border-radius: 100px;
+  border: 1px solid ${(props) => props.borderColor};
 `;
 
-const Circle = ({ bgColor }: CircleProps) => {
-  return <Container bgColor={bgColor} />;
-  //const Container: StyledComponent<"div", any, {}, never>
+interface CircleProps {
+  bgColor: string;
+  borderColor?: string;
+  text?: string;
+}
+
+const Circle = ({
+  bgColor,
+  borderColor,
+  text = 'default text', // 이거는 ES6 문법. 더 좋아.
+}: CircleProps) => {
+  // Styled Compo의 props 타입은 borderColor가 required 이기 때문에
+  // 에러가 발생하고 있고 그래서 borderColor를 보낼 때 기본값을 주면 해결됨.
+  // a ?? b   : a가 undefined면 b , 있으면 a
+  return (
+    <Container bgColor={bgColor} borderColor={borderColor ?? bgColor}>
+      {text}
+    </Container>
+  );
 };
 
 export default Circle;
-
-// 예시 TS가 런타임 전에 에러 띄우는 것
-interface PlayerShape {
-  name: string;
-  age: number;
-}
-
-const sayHello = (playerObj: PlayerShape) => `Hello ${playerObj.name}`;
-sayHello({ name: 'wf', age: 12 });
-sayHello({ name: 'wf', age: 12, hello: 1 }); //error
