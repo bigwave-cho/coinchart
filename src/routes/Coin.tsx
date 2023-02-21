@@ -1,6 +1,8 @@
 import { useEffect, useState } from 'react';
-import { useLocation, useParams } from 'react-router-dom';
+import { Route, Switch, useLocation, useParams } from 'react-router-dom';
 import styled from 'styled-components';
+import Chart from './Chart';
+import Price from './Price';
 
 const Container = styled.div`
   padding: 0px 20px;
@@ -22,6 +24,27 @@ const Loader = styled.span`
   text-align: center;
   display: block;
 `;
+const Overview = styled.div`
+  display: flex;
+  justify-content: space-between;
+  background-color: rgba(0, 0, 0, 0.5);
+  padding: 10px 20px;
+  border-radius: 10px;
+`;
+const OverviewItem = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  span:first-child {
+    font-size: 10px;
+    font-weight: 400;
+    text-transform: uppercase;
+    margin-bottom: 5px;
+  }
+`;
+const Description = styled.p`
+  margin: 20px 0px;
+`;
 
 interface RouteParams {
   coinId: string;
@@ -31,10 +54,6 @@ interface RouteState {
   name: string;
 }
 
-//참고) interface 명 지을 때 앞에 I를 붙이는 컨벤션이 있음.
-
-//배열이나 오브젝트는 구분이 안되게 복붙되니 손수 지정해줘야 함.
-//필요없지만 예시.
 interface ITag {
   coin_counter: number;
   ico_counter: number;
@@ -42,19 +61,6 @@ interface ITag {
   name: string;
 }
 
-/*
-쉽게 긁어오는 법.
-1. 콘솔창 간다.
-2. 해당 데이터 객체 우클릭-> 전역변수로 저장
-3. Object.keys(temp1).join() 
-4. 복붙 -> cmd+d 로 쉼표 선택하고 삭제 후 엔터
-5. 전체 드래그 -> 옵션 + shift + i -> : 입력해주기
-6. Object.values(temp1).map(value=>typeof value)
-7. 배열 쉼표 없애고 엔터 해준담에 기존 키 나열 된것 드래그해서 option+shift+i한담에 붙이기
-
-주의!! 배열이나 객체는 똑같이 객체로 타입이 들어오기 때문에 확인하고 필요한 데이터라면
-손수 타입지정해주면 됩니다.
-*/
 interface InfoData {
   id: string;
   name: string;
@@ -124,22 +130,61 @@ function Coin() {
       const infoData = await (
         await fetch(`https://api.coinpaprika.com/v1/coins/${coinId}`)
       ).json();
-      console.log(infoData);
       const priceData = await (
         await fetch(`https://api.coinpaprika.com/v1/ticker/${coinId}`)
       ).json();
       setInfo(infoData);
       setPriceInfo(priceData);
-      console.log(priceData);
+      setLoading(false);
     })();
-  }, []);
+  }, [coinId]);
 
   return (
     <Container>
       <Header>
-        <Title>코인 {state?.name || 'Loading'}</Title>
+        <Title>
+          {state?.name ? state.name : loading ? 'Loading...' : info?.name}
+        </Title>
       </Header>
-      {loading ? <Loader>Loading...</Loader> : <span>{}</span>}
+      {loading ? (
+        <Loader>Loading...</Loader>
+      ) : (
+        <>
+          <Overview>
+            <OverviewItem>
+              <span>Rank:</span>
+              <span>{info?.rank}</span>
+            </OverviewItem>
+            <OverviewItem>
+              <span>Symbol:</span>
+              <span>${info?.symbol}</span>
+            </OverviewItem>
+            <OverviewItem>
+              <span>Open Source:</span>
+              <span>{info?.open_source ? 'Yes' : 'No'}</span>
+            </OverviewItem>
+          </Overview>
+          <Description>{info?.description}</Description>
+          <Overview>
+            <OverviewItem>
+              <span>Total Suply:</span>
+              <span>{priceInfo?.total_supply}</span>
+            </OverviewItem>
+            <OverviewItem>
+              <span>Max Supply:</span>
+              <span>{priceInfo?.max_supply}</span>
+            </OverviewItem>
+          </Overview>
+          <Switch>
+            <Route path={`/${coinId}/price`}>
+              <Price />
+            </Route>
+            <Route path={`/${coinId}/chart`}>
+              <Chart />
+            </Route>
+          </Switch>
+        </>
+      )}
     </Container>
   );
 }
