@@ -1,4 +1,3 @@
-import { useEffect, useState } from 'react';
 import { useQuery } from 'react-query';
 import { Link } from 'react-router-dom';
 import styled from 'styled-components';
@@ -59,26 +58,7 @@ interface CoinIterface {
 }
 
 function Coins() {
-  //useQuery 첫 인자 쿼리키: query의 고유 식별자
-  // 두 번째 인자 : 페치함수
-  // useQuery는 알아서 페치함수가 로딩중이면 isLoading
-  // 데이터는 data 프로퍼티로 반환
   const { isLoading, data } = useQuery<CoinIterface[]>('allCoins', fetchCoins);
-  // 아래의 여러 줄의 코드가 단 한 줄로 줄여짐.
-  // ## 또한 react-query가 데이터를 캐싱해두기에 페이지로 돌아와도
-  // 로딩을 하지 않는다.
-
-  // const [coins, setCoins] = useState<CoinIterface[]>([]);
-  // const [loading, setLoading] = useState(true);
-
-  // useEffect(() => {
-  //   (async () => {
-  //     const response = await fetch('https://api.coinpaprika.com/v1/coins');
-  //     const json = await response.json();
-  //     setCoins(json.slice(0, 99));
-  //     setLoading(false);
-  //   })();
-  // }, []);
 
   return (
     <Container>

@@ -1,7 +1,9 @@
 import { createGlobalStyle } from 'styled-components';
 import Router from './Routers';
+import { ReactQueryDevtools } from 'react-query/devtools';
+// npm i -D @tanstack/react-query-devtools
+// devtools로 캐시에 있는 query를 볼 수 있음.
 
-// Styled-compo의 Reset 전역 스타일 적용 방법
 const GlobalStyle = createGlobalStyle`
 html, body, div, span, applet, object, iframe,
 h1, h2, h3, h4, h5, h6, p, blockquote, pre,
@@ -54,7 +56,6 @@ table {
   box-sizing: border-box;
 }
 body {
-  //구글폰트 적용 SSP
   font-weight: 300;
   font-family: 'Source Sans Pro', sans-serif;
   background-color:${(props) => props.theme.bgColor};
@@ -63,17 +64,17 @@ body {
 }
 a {
   text-decoration:none;
-  //부모로부터 color 상속받기
   color:inherit;
 }
 `;
 
-//GlobalStyle 컴포를 만들어서 아래처럼 위치시키면 렌더링되면서 전역에 스타일 적용함.
+//ReactQueryDevtools 컴포넌트  위치시키면 브라우저에 뜨고 쿼리확인 가능.
 function App() {
   return (
     <>
       <GlobalStyle />
       <Router />
+      <ReactQueryDevtools initialIsOpen={true} />
     </>
   );
 }
