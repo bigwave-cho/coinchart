@@ -1,6 +1,8 @@
 import { useEffect, useState } from 'react';
+import { useQuery } from 'react-query';
 import { Link } from 'react-router-dom';
 import styled from 'styled-components';
+import { fetchCoins } from '../api';
 
 const Container = styled.div`
   padding: 0px 20px;
@@ -57,28 +59,37 @@ interface CoinIterface {
 }
 
 function Coins() {
-  const [coins, setCoins] = useState<CoinIterface[]>([]);
-  const [loading, setLoading] = useState(true);
+  //useQuery 첫 인자 쿼리키: query의 고유 식별자
+  // 두 번째 인자 : 페치함수
+  // useQuery는 알아서 페치함수가 로딩중이면 isLoading
+  // 데이터는 data 프로퍼티로 반환
+  const { isLoading, data } = useQuery<CoinIterface[]>('allCoins', fetchCoins);
+  // 아래의 여러 줄의 코드가 단 한 줄로 줄여짐.
+  // ## 또한 react-query가 데이터를 캐싱해두기에 페이지로 돌아와도
+  // 로딩을 하지 않는다.
 
-  useEffect(() => {
-    (async () => {
-      const response = await fetch('https://api.coinpaprika.com/v1/coins');
-      const json = await response.json();
-      setCoins(json.slice(0, 99));
-      setLoading(false);
-    })();
-  }, []);
+  // const [coins, setCoins] = useState<CoinIterface[]>([]);
+  // const [loading, setLoading] = useState(true);
+
+  // useEffect(() => {
+  //   (async () => {
+  //     const response = await fetch('https://api.coinpaprika.com/v1/coins');
+  //     const json = await response.json();
+  //     setCoins(json.slice(0, 99));
+  //     setLoading(false);
+  //   })();
+  // }, []);
 
   return (
     <Container>
       <Header>
         <Title>코인</Title>
       </Header>
-      {loading ? (
+      {isLoading ? (
         <Loader>Loading...</Loader>
       ) : (
         <CoinList>
-          {coins.map((coin) => (
+          {data?.slice(0, 100).map((coin) => (
             <Link
               key={coin.id}
               to={{ pathname: `/${coin.id}`, state: { name: coin.name } }}
