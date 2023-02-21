@@ -16,6 +16,8 @@ const Header = styled.header`
 const CoinList = styled.ul``;
 
 const Coin = styled.li`
+  display: flex;
+  align-items: center;
   background-color: white;
   padding: 20px;
   color: ${(props) => props.theme.bgColor};
@@ -36,6 +38,12 @@ const Title = styled.h1`
 const Loader = styled.span`
   text-align: center;
   display: block;
+`;
+
+const Img = styled.img`
+  width: 35px;
+  height: 35px;
+  margin-right: 10px;
 `;
 
 interface CoinIterface {
@@ -71,8 +79,30 @@ function Coins() {
       ) : (
         <CoinList>
           {coins.map((coin) => (
-            <Link key={coin.id} to={`/${coin.id}`}>
-              <Coin>{coin.name} &rarr;</Coin>
+            <Link
+              // ## React Router 6버전에서 Link컴포넌트를 이용해서 state보내기
+              // useParams사용하면 해당 path를 이용해서 api를 요청하는 과정을 거쳐야하지만
+              // Link에 state를 담아보낸 정보로 컴포넌트를 구성하면 더 빨리 렌더링할 수 있다.
+
+              //## 주의
+              // Home을 거치지 않고 해당 코인 페이지로 바로 접속하게 된다면
+              // Link로 state를 전달하는 과정을 거치지 않아 해당 코인 정보를 받아볼 수 없다.
+
+              // ## React Router 5버전
+              //< Link to={{ pathname: "/home", state: state }} / >
+
+              // ## React Router 6버전
+              //< Link to="/home" state={state} / >
+              key={coin.id}
+              to={{ pathname: `/${coin.id}`, state: { name: coin.name } }}
+            >
+              <Coin>
+                <Img
+                  src={`https://coinicons-api.vercel.app/api/icon/${coin.symbol.toLocaleLowerCase()}`}
+                  alt={'coinLogo'}
+                ></Img>
+                {coin.name} &rarr;
+              </Coin>
             </Link>
           ))}
         </CoinList>
