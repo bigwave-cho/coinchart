@@ -68,7 +68,6 @@ a {
 }
 `;
 
-//ReactQueryDevtools 컴포넌트  위치시키면 브라우저에 뜨고 쿼리확인 가능.
 function App() {
   return (
     <>

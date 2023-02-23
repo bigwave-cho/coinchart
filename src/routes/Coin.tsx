@@ -152,12 +152,9 @@ function Coin() {
   const { coinId } = useParams<RouteParams>();
   const { state } = useLocation<RouteState>();
 
-  //인자로 들어간 url페이지에 있는지 확인
   const priceMatch = useRouteMatch('/:coinId/price');
   const chartMatch = useRouteMatch('/:coinId/chart');
-  // 쿼리는 어레이로 관리됨. 따라서 아래처럼 coinId가 같더라도
-  // 첫번째 요소에 구별할 요소를 넣어주면 됨.
-  // 인자가 필요한 페치함수는 화살표함수를 이용해서 페치함수를 실행해서 arg를 전달하면 됨.
+
   const { isLoading: infoLoading, data: infoData } = useQuery<InfoData>(
     ['info', coinId],
     () => fetchCoinInfo(coinId)
@@ -216,7 +213,7 @@ function Coin() {
               <Price />
             </Route>
             <Route path={`/:coinId/chart`}>
-              <Chart />
+              <Chart coinId={coinId} />
             </Route>
           </Switch>
         </>
