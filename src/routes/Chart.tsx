@@ -2,6 +2,8 @@ import { useQuery } from 'react-query';
 import { fetchCoinHistory } from '../api';
 //https://apexcharts.com/docs/react-charts/ chart 라이브러리
 import ApexCharts from 'react-apexcharts';
+import { isDartAtom } from '../atoms';
+import { useRecoilValue } from 'recoil';
 
 export interface ChartProps {
   coinId: string;
@@ -22,6 +24,7 @@ function Chart({ coinId }: ChartProps) {
   const { isLoading, data } = useQuery<IHistorical[]>(['ohlcv', coinId], () =>
     fetchCoinHistory(coinId)
   );
+  const isDark = useRecoilValue(isDartAtom);
 
   const series = [
     {
@@ -45,7 +48,7 @@ function Chart({ coinId }: ChartProps) {
           series={series}
           options={{
             theme: {
-              mode: 'light',
+              mode: isDark ? 'dark' : 'light',
             },
             chart: {
               type: 'candlestick',
