@@ -14,19 +14,23 @@ import Chart from './Chart';
 import Price from './Price';
 //react-helmet 사용해보기
 import { Helmet } from 'react-helmet';
+import { useRecoilValue, useSetRecoilState } from 'recoil';
+import { isDartAtom } from '../atoms';
 const Container = styled.div`
+  width: 560px;
   padding: 0px 20px;
 `;
 
 const Header = styled.header`
+  position: relative;
   height: 10vh;
   display: flex;
   justify-content: center;
   align-items: center;
 
-  i {
+  .fa-arrow-left {
     position: absolute;
-    left: 30px;
+    left: 0;
     font-size: 30px;
     transition: color 0.1s ease-in;
 
@@ -87,6 +91,29 @@ const Tab = styled.span<{ isActive: boolean }>`
     props.isActive ? props.theme.accentColor : props.theme.textColor};
   a {
     display: block;
+  }
+`;
+
+const DarkModeToggleBtn = styled.button<{ isDark: boolean }>`
+  position: absolute;
+  right: 0px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 5px;
+  width: 30px;
+  height: 30px;
+  color: ${(props) => (props.isDark ? 'white' : 'black')};
+  font-size: 25px;
+  border: 0px;
+  border-radius: 50%;
+  background-color: ${(props) => props.theme.bgColor};
+  transition: all 0.1s ease-in;
+
+  &:hover {
+    color: yellow;
+    background-color: ${(props) => (props.isDark ? '' : 'lightgray')};
+    cursor: pointer;
   }
 `;
 
@@ -169,10 +196,17 @@ function Coin() {
   const priceMatch = useRouteMatch('/:coinId/price');
   const chartMatch = useRouteMatch('/:coinId/chart');
 
+  const isDark = useRecoilValue(isDartAtom);
+  const setDarkAtom = useSetRecoilState(isDartAtom);
+
+  const onToggleDarkMode = () => {
+    setDarkAtom((prev: boolean) => !prev);
+    window.localStorage.setItem('CoinChartDarkMode', JSON.stringify(!isDark));
+  };
+
   const { isLoading: infoLoading, data: infoData } = useQuery<InfoData>(
     ['info', coinId],
     () => fetchCoinInfo(coinId),
-    // 쿼리 갱신 시간 설정해보기
     { refetchInterval: 5000 }
   );
   const { isLoading: tickersLoading, data: tickersData } = useQuery<PriceData>(
@@ -182,16 +216,13 @@ function Coin() {
   const loading = infoLoading || tickersLoading;
 
   const history = useHistory();
-  //React-router v6에서 useNavigate로 바뀜.
   const onGoback = () => {
     history.push('/');
   };
 
   return (
     <Container>
-      <Helmet
-      //head 설정 모두 가능. favicon도 넣을 수 있음. helmet은 head로 가는 direct link
-      >
+      <Helmet>
         <title>
           {state?.name ? state.name : loading ? 'Loading...' : infoData?.name}
         </title>
@@ -201,6 +232,16 @@ function Coin() {
         <Title>
           {state?.name ? state.name : loading ? 'Loading...' : infoData?.name}
         </Title>
+        <DarkModeToggleBtn
+          onClick={onToggleDarkMode}
+          isDark={JSON.parse(isDark!)}
+        >
+          {isDark ? (
+            <i className="fa-solid fa-sun" />
+          ) : (
+            <i className="fa-solid fa-moon" />
+          )}
+        </DarkModeToggleBtn>
       </Header>
       {loading ? (
         <Loader>Loading...</Loader>

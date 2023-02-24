@@ -1,6 +1,5 @@
 import { useQuery } from 'react-query';
 import { fetchCoinHistory } from '../api';
-//https://apexcharts.com/docs/react-charts/ chart 라이브러리
 import ApexCharts from 'react-apexcharts';
 import { isDartAtom } from '../atoms';
 import { useRecoilValue } from 'recoil';

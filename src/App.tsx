@@ -1,11 +1,9 @@
 import { createGlobalStyle, ThemeProvider } from 'styled-components';
 import Router from './Routers';
-import { ReactQueryDevtools } from 'react-query/devtools';
+// import { ReactQueryDevtools } from 'react-query/devtools';
 import { darkTheme, lightTheme } from './theme';
 import { useRecoilValue } from 'recoil';
 import { isDartAtom } from './atoms';
-// npm i -D @tanstack/react-query-devtools
-// devtools로 캐시에 있는 query를 볼 수 있음.
 
 const GlobalStyle = createGlobalStyle`
 html, body, div, span, applet, object, iframe,
@@ -59,6 +57,8 @@ table {
   box-sizing: border-box;
 }
 body {
+  display: flex;
+  justify-content: center;
   font-weight: 300;
   font-family: 'Source Sans Pro', sans-serif;
   background-color:${(props) => props.theme.bgColor};
@@ -70,25 +70,17 @@ a {
   color:inherit;
 }
 `;
-/*
-Recoil
-Atom : 리코일은 서로 다른 Atom을 생성해서 각각의 아톰에는 
-원하는 어떤 value든 저장이 가능하다.
 
-적용 순서
-1. Recoil로 index 감싸기
-2. Atom 생성
-3. useRecoilValue(Atom명) 으로 value 가져오기
-*/
 function App() {
   const isDark = useRecoilValue(isDartAtom);
+
   return (
     <>
       <ThemeProvider theme={isDark ? darkTheme : lightTheme}>
         <GlobalStyle />
         <Router />
       </ThemeProvider>
-      <ReactQueryDevtools initialIsOpen={true} />
+      {/* <ReactQueryDevtools initialIsOpen={true} /> */}
     </>
   );
 }
