@@ -1,3 +1,4 @@
+import { Helmet } from 'react-helmet';
 import { useQuery } from 'react-query';
 import { Link } from 'react-router-dom';
 import styled from 'styled-components';
@@ -62,8 +63,11 @@ function Coins() {
 
   return (
     <Container>
+      <Helmet>
+        <title>Coin Chart</title>
+      </Helmet>
       <Header>
-        <Title>코인</Title>
+        <Title>Coin Chart</Title>
       </Header>
       {isLoading ? (
         <Loader>Loading...</Loader>
