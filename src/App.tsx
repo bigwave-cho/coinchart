@@ -72,16 +72,26 @@ a {
 
 function App() {
   const [isDark, setIsDark] = useState(false);
+
   const toggleDart = () => setIsDark((prev) => !prev);
   return (
     <>
       <ThemeProvider theme={isDark ? darkTheme : lightTheme}>
         <button onClick={toggleDart}>Toggle Mode</button>
         <GlobalStyle />
-        <Router />
+        <Router isDark={isDark} toggleDart={toggleDart} />
       </ThemeProvider>
       <ReactQueryDevtools initialIsOpen={true} />
     </>
   );
 }
 export default App;
+
+/*
+전역상태관리를 사용해야 하는 이유
+isDart의 여정 : App -> Router => Coin -> chart
+
+공통적으로 사용하는 상태를 자식 컴포넌트에게 전달할 때
+수많은 컴포넌트를 거쳐야해서 비효율적.
+
+*/

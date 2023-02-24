@@ -58,7 +58,11 @@ interface CoinIterface {
   type: string;
 }
 
-function Coins() {
+interface ICoinsProps {
+  toggleDark: () => void;
+}
+
+function Coins({ toggleDark }: ICoinsProps) {
   const { isLoading, data } = useQuery<CoinIterface[]>('allCoins', fetchCoins);
 
   return (
@@ -68,6 +72,7 @@ function Coins() {
       </Helmet>
       <Header>
         <Title>Coin Chart</Title>
+        <button onClick={toggleDark}>Toggle Dark Mode</button>
       </Header>
       {isLoading ? (
         <Loader>Loading...</Loader>
