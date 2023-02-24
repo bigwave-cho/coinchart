@@ -69,7 +69,11 @@ a {
   color:inherit;
 }
 `;
-
+/*
+Recoil
+Atom : 리코일은 서로 다른 Atom을 생성해서 각각의 아톰에는 
+원하는 어떤 value든 저장이 가능하다.
+*/
 function App() {
   const [isDark, setIsDark] = useState(false);
 
@@ -77,21 +81,11 @@ function App() {
   return (
     <>
       <ThemeProvider theme={isDark ? darkTheme : lightTheme}>
-        <button onClick={toggleDart}>Toggle Mode</button>
         <GlobalStyle />
-        <Router isDark={isDark} toggleDart={toggleDart} />
+        <Router />
       </ThemeProvider>
       <ReactQueryDevtools initialIsOpen={true} />
     </>
   );
 }
 export default App;
-
-/*
-전역상태관리를 사용해야 하는 이유
-isDart의 여정 : App -> Router => Coin -> chart
-
-공통적으로 사용하는 상태를 자식 컴포넌트에게 전달할 때
-수많은 컴포넌트를 거쳐야해서 비효율적.
-
-*/
