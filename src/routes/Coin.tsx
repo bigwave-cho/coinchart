@@ -6,6 +6,7 @@ import {
   useLocation,
   useParams,
   useRouteMatch,
+  useHistory,
 } from 'react-router-dom';
 import styled from 'styled-components';
 import { fetchCoinInfo, fetchCoinTickers } from '../api';
@@ -22,6 +23,18 @@ const Header = styled.header`
   display: flex;
   justify-content: center;
   align-items: center;
+
+  i {
+    position: absolute;
+    left: 30px;
+    font-size: 30px;
+    transition: color 0.1s ease-in;
+
+    &:hover {
+      color: #d17b7b;
+      cursor: pointer;
+    }
+  }
 `;
 
 const Title = styled.h1`
@@ -167,6 +180,13 @@ function Coin() {
     () => fetchCoinTickers(coinId)
   );
   const loading = infoLoading || tickersLoading;
+
+  const history = useHistory();
+  //React-router v6에서 useNavigate로 바뀜.
+  const onGoback = () => {
+    history.push('/');
+  };
+
   return (
     <Container>
       <Helmet
@@ -177,6 +197,7 @@ function Coin() {
         </title>
       </Helmet>
       <Header>
+        <i onClick={onGoback} className="fa-solid fa-arrow-left" />
         <Title>
           {state?.name ? state.name : loading ? 'Loading...' : infoData?.name}
         </Title>
@@ -220,7 +241,7 @@ function Coin() {
           </Tabs>
           <Switch>
             <Route path={`/${coinId}/price`}>
-              <Price />
+              <Price coinId={coinId} />
             </Route>
             <Route path={`/:coinId/chart`}>
               <Chart coinId={coinId} />

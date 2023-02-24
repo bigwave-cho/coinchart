@@ -3,11 +3,11 @@ import { fetchCoinHistory } from '../api';
 //https://apexcharts.com/docs/react-charts/ chart 라이브러리
 import ApexCharts from 'react-apexcharts';
 
-interface ChartProps {
+export interface ChartProps {
   coinId: string;
 }
 
-interface IHistorical {
+export interface IHistorical {
   close: string;
   high: string;
   low: string;
@@ -22,32 +22,49 @@ function Chart({ coinId }: ChartProps) {
   const { isLoading, data } = useQuery<IHistorical[]>(['ohlcv', coinId], () =>
     fetchCoinHistory(coinId)
   );
+
+  const series = [
+    {
+      data:
+        data?.map((item) => {
+          return {
+            x: new Date(item.time_close * 1000).toISOString(),
+            y: [+item.open, +item.high, +item.low, +item.close],
+          };
+        }) ?? [],
+    },
+  ];
+
   return (
     <div>
       {isLoading ? (
         'Loading chart..'
       ) : (
         <ApexCharts
-          type="line"
-          series={[
-            { name: 'price', data: data?.map((price) => +price.close) ?? [] },
-          ]}
+          type="candlestick"
+          series={series}
           options={{
             theme: {
               mode: 'dark',
             },
             chart: {
+              type: 'candlestick',
               height: 300,
               width: 500,
               toolbar: { show: false },
               background: 'transparent',
             },
             grid: {
-              show: false,
+              // show: false,
             },
             yaxis: { show: false },
             xaxis: {
-              labels: { show: false },
+              labels: {
+                show: true,
+                rotate: -45,
+                rotateAlways: true,
+                minHeight: 100,
+              },
               axisTicks: { show: false },
               axisBorder: { show: false },
               type: 'datetime',
@@ -55,11 +72,6 @@ function Chart({ coinId }: ChartProps) {
                 new Date(price.time_close * 1000).toISOString()
               ),
             },
-            fill: {
-              type: 'gradient',
-              gradient: { gradientToColors: ['#0be881'], stops: [0, 100] },
-            },
-            colors: ['blue'],
             tooltip: {
               y: {
                 formatter: (value) => `$${value.toFixed(2)}`,
@@ -67,7 +79,7 @@ function Chart({ coinId }: ChartProps) {
             },
             stroke: {
               curve: 'smooth',
-              width: 5,
+              width: 2,
             },
           }}
         />
