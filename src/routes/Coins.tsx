@@ -19,11 +19,12 @@ const CoinList = styled.ul``;
 const Coin = styled.li`
   display: flex;
   align-items: center;
-  background-color: white;
+  background-color: ${(props) => props.theme.cardBgColor};
   padding: 20px;
-  color: ${(props) => props.theme.bgColor};
+  color: ${(props) => props.theme.textColor};
   border-radius: 15px;
   margin-bottom: 10px;
+  border: 1px solid white;
   transition: color 0.2s ease-in;
 
   &:hover {

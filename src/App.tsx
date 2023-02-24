@@ -1,6 +1,8 @@
-import { createGlobalStyle } from 'styled-components';
+import { createGlobalStyle, ThemeProvider } from 'styled-components';
 import Router from './Routers';
 import { ReactQueryDevtools } from 'react-query/devtools';
+import { darkTheme, lightTheme } from './theme';
+import { useState } from 'react';
 // npm i -D @tanstack/react-query-devtools
 // devtools로 캐시에 있는 query를 볼 수 있음.
 
@@ -69,10 +71,15 @@ a {
 `;
 
 function App() {
+  const [isDark, setIsDark] = useState(false);
+  const toggleDart = () => setIsDark((prev) => !prev);
   return (
     <>
-      <GlobalStyle />
-      <Router />
+      <ThemeProvider theme={isDark ? darkTheme : lightTheme}>
+        <button onClick={toggleDart}>Toggle Mode</button>
+        <GlobalStyle />
+        <Router />
+      </ThemeProvider>
       <ReactQueryDevtools initialIsOpen={true} />
     </>
   );
