@@ -148,13 +148,11 @@ function Coins() {
     }));
   };
 
-  // useEffect(() => {
-  //   setPage(scrollHeight.page);
-  //   console.log(scrollHeight.hegiht);
-  //   // window.scrollTo(0, scrollHeight.hegiht);
-  //   if (scrollHeight.hegiht !== 0)
-  //     window.scrollTo({ top: scrollHeight.hegiht, behavior: 'smooth' });
-  // }, [scrollHeight]);
+  useEffect(() => {
+    setPage(scrollHeight.page);
+  }, [scrollHeight]);
+
+  window.scrollTo({ top: scrollHeight.hegiht, behavior: 'smooth' });
 
   return (
     <Container>
@@ -183,7 +181,10 @@ function Coins() {
             <Link
               onClick={onClickCoin}
               key={coin.id}
-              to={{ pathname: `/${coin.id}`, state: { name: coin.name } }}
+              to={{
+                pathname: `/coinchart/${coin.id}`,
+                state: { name: coin.name },
+              }}
             >
               <Coin isDark={isDark}>
                 <div>
