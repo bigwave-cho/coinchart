@@ -1,13 +1,20 @@
+import { useEffect, useState } from 'react';
 import { Helmet } from 'react-helmet';
 import { useQuery } from 'react-query';
 import { Link } from 'react-router-dom';
 import { useRecoilValue, useSetRecoilState } from 'recoil';
-import styled from 'styled-components';
+import styled, { keyframes } from 'styled-components';
 import { fetchCoins } from '../api';
-import { isDartAtom } from '../atoms';
+import { isDartAtom, scrollH } from '../atoms';
 const Container = styled.div`
   min-width: 560px;
   padding: 0px 20px;
+`;
+
+const bounceAnimation = keyframes`
+  0% { transform: translateY(0); }
+  50% { transform: translateY(-10px); }
+  100% { transform: translateY(0); }
 `;
 
 const Header = styled.header<{ isDark: boolean }>`
@@ -23,10 +30,24 @@ const Header = styled.header<{ isDark: boolean }>`
     font-size: 30px;
     transition: all 0.5s ease-in;
     color: ${(props) => (props.isDark ? 'white' : 'red')};
+    animation: ${bounceAnimation} 1s ease-in-out infinite;
   }
 `;
 
-const CoinList = styled.ul``;
+const CoinList = styled.ul`
+  text-align: center;
+
+  button {
+    padding: 10px 20px;
+    cursor: pointer;
+    border: none;
+    border-radius: 10px;
+
+    &:hover {
+      opacity: 0.8;
+    }
+  }
+`;
 
 const Coin = styled.li<{ isDark: boolean }>`
   display: flex;
@@ -106,10 +127,35 @@ function Coins() {
   const { isLoading, data } = useQuery<CoinIterface[]>('allCoins', fetchCoins);
   const isDark = useRecoilValue(isDartAtom);
   const setDarkAtom = useSetRecoilState(isDartAtom);
+  const scrollHeight = useRecoilValue(scrollH);
+  const setScrollHeight = useSetRecoilState(scrollH);
+  const [page, setPage] = useState(1);
+
   const onToggleDarkMode = () => {
     setDarkAtom((prev: boolean) => !prev);
     window.localStorage.setItem('CoinChartDarkMode', JSON.stringify(!isDark));
   };
+
+  const onListMoreCoins = () => {
+    setPage((prev) => prev + 1);
+  };
+
+  const onClickCoin = () => {
+    setScrollHeight((prev) => ({
+      ...prev,
+      page: page,
+      hegiht: window.scrollY,
+    }));
+  };
+
+  // useEffect(() => {
+  //   setPage(scrollHeight.page);
+  //   console.log(scrollHeight.hegiht);
+  //   // window.scrollTo(0, scrollHeight.hegiht);
+  //   if (scrollHeight.hegiht !== 0)
+  //     window.scrollTo({ top: scrollHeight.hegiht, behavior: 'smooth' });
+  // }, [scrollHeight]);
+
   return (
     <Container>
       <Helmet>
@@ -133,8 +179,9 @@ function Coins() {
         <Loader>Loading...</Loader>
       ) : (
         <CoinList>
-          {data?.slice(0, 100).map((coin) => (
+          {data?.slice(0, 10 * page).map((coin) => (
             <Link
+              onClick={onClickCoin}
               key={coin.id}
               to={{ pathname: `/${coin.id}`, state: { name: coin.name } }}
             >
@@ -150,6 +197,7 @@ function Coins() {
               </Coin>
             </Link>
           ))}
+          <button onClick={onListMoreCoins}>More Coins</button>
         </CoinList>
       )}
     </Container>

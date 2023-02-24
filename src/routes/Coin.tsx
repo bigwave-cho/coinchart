@@ -50,17 +50,20 @@ const Loader = styled.span`
   text-align: center;
   display: block;
 `;
-const Overview = styled.div`
+const Overview = styled.div<{ isDark: boolean }>`
   display: flex;
   justify-content: space-between;
-  background-color: rgba(0, 0, 0, 0.5);
+  background-color: ${(props) =>
+    props.isDark ? 'rgba(0, 0, 0, 0.5)' : 'lightgrey'};
   padding: 10px 20px;
   border-radius: 10px;
 `;
-const OverviewItem = styled.div`
+const OverviewItem = styled.div<{ isDark: boolean }>`
   display: flex;
   flex-direction: column;
   align-items: center;
+  color: ${(props) => (props.isDark ? 'white' : 'black')};
+
   span:first-child {
     font-size: 10px;
     font-weight: 400;
@@ -68,8 +71,10 @@ const OverviewItem = styled.div`
     margin-bottom: 5px;
   }
 `;
+
 const Description = styled.p`
   margin: 20px 0px;
+  font-weight: 700;
 `;
 
 const Tabs = styled.div`
@@ -89,6 +94,11 @@ const Tab = styled.span<{ isActive: boolean }>`
   border-radius: 10px;
   color: ${(props) =>
     props.isActive ? props.theme.accentColor : props.theme.textColor};
+
+  &:hover {
+    opacity: 0.7;
+  }
+
   a {
     display: block;
   }
@@ -206,8 +216,8 @@ function Coin() {
 
   const { isLoading: infoLoading, data: infoData } = useQuery<InfoData>(
     ['info', coinId],
-    () => fetchCoinInfo(coinId),
-    { refetchInterval: 5000 }
+    () => fetchCoinInfo(coinId)
+    // { refetchInterval: 5000 }
   );
   const { isLoading: tickersLoading, data: tickersData } = useQuery<PriceData>(
     ['tickers', coinId],
@@ -247,27 +257,27 @@ function Coin() {
         <Loader>Loading...</Loader>
       ) : (
         <>
-          <Overview>
-            <OverviewItem>
+          <Overview isDark={isDark}>
+            <OverviewItem isDark={isDark}>
               <span>Rank:</span>
               <span>{infoData?.rank}</span>
             </OverviewItem>
-            <OverviewItem>
+            <OverviewItem isDark={isDark}>
               <span>Symbol:</span>
               <span>${infoData?.symbol}</span>
             </OverviewItem>
-            <OverviewItem>
+            <OverviewItem isDark={isDark}>
               <span>Price:</span>
               <span>{tickersData?.quotes?.USD?.price?.toFixed(3)}</span>
             </OverviewItem>
           </Overview>
           <Description>{infoData?.description}</Description>
-          <Overview>
-            <OverviewItem>
+          <Overview isDark={isDark}>
+            <OverviewItem isDark={isDark}>
               <span>Total Suply:</span>
               <span>{tickersData?.total_supply}</span>
             </OverviewItem>
-            <OverviewItem>
+            <OverviewItem isDark={isDark}>
               <span>Max Supply:</span>
               <span>{tickersData?.max_supply}</span>
             </OverviewItem>
