@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import { Helmet } from 'react-helmet';
 import { useQuery } from 'react-query';
 import { Link } from 'react-router-dom';
-import { useRecoilValue, useSetRecoilState } from 'recoil';
+import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil';
 import styled, { keyframes } from 'styled-components';
 import { fetchCoins } from '../api';
 import { isDartAtom, scrollH } from '../atoms';
@@ -127,17 +127,17 @@ function Coins() {
   const { isLoading, data } = useQuery<CoinIterface[]>('allCoins', fetchCoins);
   const isDark = useRecoilValue(isDartAtom);
   const setDarkAtom = useSetRecoilState(isDartAtom);
-  const scrollHeight = useRecoilValue(scrollH);
-  const setScrollHeight = useSetRecoilState(scrollH);
-  const [page, setPage] = useState(1);
+  const [scrollHeight, setScrollHeight] = useRecoilState(scrollH);
+  const page = scrollHeight.page;
 
   const onToggleDarkMode = () => {
     setDarkAtom((prev: boolean) => !prev);
+    setScrollHeight((prev) => ({ ...prev, hegiht: window.scrollY }));
     window.localStorage.setItem('CoinChartDarkMode', JSON.stringify(!isDark));
   };
 
   const onListMoreCoins = () => {
-    setPage((prev) => prev + 1);
+    setScrollHeight((prev) => ({ ...prev, page: page + 1 }));
   };
 
   const onClickCoin = () => {
@@ -149,10 +149,8 @@ function Coins() {
   };
 
   useEffect(() => {
-    setPage(scrollHeight.page);
-  }, [scrollHeight]);
-
-  window.scrollTo({ top: scrollHeight.hegiht, behavior: 'smooth' });
+    window.scrollTo({ top: scrollHeight.hegiht, behavior: 'smooth' });
+  }, [scrollHeight.hegiht]);
 
   return (
     <Container>
